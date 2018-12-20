@@ -23,17 +23,18 @@ end_time = time[-1]
 norm_time = time * framerate * times  # k-means时正则化
 wave = np.dstack((wave_data, norm_time)).reshape(-1, 2)
 wave = np.array(wave)
+wave = np.abs(wave)
 
-'''wave_split = []
+wave_split = []
 for frame in wave:
     if frame[0] > 0.1 * framerate:
         wave_split.append(frame)
 wave_split = np.array(wave_split)
-'''
-y_pred = KMeans(n_clusters=10).fit_predict(wave)
-time = np.delete(wave, 0, axis=1)
+
+y_pred = KMeans(n_clusters=num).fit_predict(wave_split)
+time = np.delete(wave_split, 0, axis=1)
 time = time / framerate / times
-plt.scatter(wave[:, 1], wave[:, 0] / framerate / times, c=y_pred)
+plt.scatter(wave_split[:, 1], wave_split[:, 0] / framerate / times, c=y_pred)
 plt.savefig("sample")
 plt.show()
 
